@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-10-28
+
+### Fixed
+- Saving a workspace layout failed because database tables had no default for generated ids and update timestamps.
+
+### Changed
+- Database now generates ids and keeps update timestamps current on its own.
+
 ## [0.3.0] - 2026-10-28
 
 ### Added

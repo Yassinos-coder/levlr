@@ -30,7 +30,7 @@ model Profile {
 }
 
 model BrokerConnection {
-  id                String    @id @default(uuid()) @db.Uuid
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId            String    @map("user_id") @db.Uuid
   broker            String
   environment       String
@@ -51,12 +51,12 @@ model BrokerConnection {
 }
 
 model Workspace {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @map("user_id") @db.Uuid
   name      String
   layout    Json
   isDefault Boolean  @default(false) @map("is_default")
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
   user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -66,7 +66,7 @@ model Workspace {
 }
 
 model Watchlist {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @map("user_id") @db.Uuid
   name      String
   symbols   String[]
@@ -80,13 +80,13 @@ model Watchlist {
 }
 
 model ChartLayout {
-  id         String   @id @default(uuid()) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId     String   @map("user_id") @db.Uuid
   name       String
   symbol     String
   resolution String
   content    Json
-  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
   user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -96,14 +96,14 @@ model ChartLayout {
 }
 
 model ChartDrawing {
-  id         String   @id @default(uuid()) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId     String   @map("user_id") @db.Uuid
   symbol     String
   shapeType  String   @map("shape_type")
   points     Json
   properties Json
   label      String?
-  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
   user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -131,7 +131,7 @@ model RiskSettings {
 }
 
 model Trade {
-  id               String    @id @default(uuid()) @db.Uuid
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId           String    @map("user_id") @db.Uuid
   connectionId     String    @map("connection_id") @db.Uuid
   brokerPositionId String    @map("broker_position_id")
@@ -176,7 +176,7 @@ model AiSettings {
 }
 
 model AiConversation {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @map("user_id") @db.Uuid
   symbol    String
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -190,7 +190,7 @@ model AiConversation {
 }
 
 model AiMessage {
-  id             String   @id @default(uuid()) @db.Uuid
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   conversationId String   @map("conversation_id") @db.Uuid
   role           String
   content        Json
@@ -204,7 +204,7 @@ model AiMessage {
 }
 
 model Alert {
-  id        String  @id @default(uuid()) @db.Uuid
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String  @map("user_id") @db.Uuid
   symbol    String
   type      String
