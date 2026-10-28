@@ -44,6 +44,7 @@ model BrokerConnection {
   user   Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
   trades Trade[]
 
+  @@unique([userId, broker, externalAccountId])
   @@index([userId])
   @@map("broker_connections")
   @@schema("levlr")

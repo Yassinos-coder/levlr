@@ -1,3 +1,5 @@
+export * from './payloads';
+
 export type CTraderEnvironment = 'demo' | 'live';
 
 export interface CTraderAppConfig {
@@ -39,4 +41,12 @@ export interface CTraderNewOrderParams {
   stopLoss?: number;
   takeProfit?: number;
   clientOrderId?: string;
+}
+
+export type CTraderLatencyState = 'connecting' | 'up' | 'down';
+
+export interface CTraderLatencySnapshot {
+  state: CTraderLatencyState;
+  latencyMs: number | null;
+  measuredAt: number | null;
 }

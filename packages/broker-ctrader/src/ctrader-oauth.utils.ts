@@ -1,6 +1,6 @@
-import { CTRADER_AUTH_URL, CTRADER_TOKEN_URL } from '@/constants/ctrader.constants';
-import { CTraderError } from '@/ctrader-error';
-import type { CTraderAppConfig, CTraderTokenResponse, CTraderTokens } from '@/interfaces';
+import { CTRADER_AUTH_URL, CTRADER_TOKEN_URL } from './constants/ctrader.constants';
+import { CTraderError } from './ctrader-error';
+import type { CTraderAppConfig, CTraderTokenResponse, CTraderTokens } from './interfaces';
 
 export class CTraderOAuthUtils {
   static buildAuthorizationUrl(config: CTraderAppConfig, state: string): string {

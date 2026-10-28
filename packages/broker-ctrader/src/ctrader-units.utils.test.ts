@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
-import { CTraderOAuthUtils } from '@/ctrader-oauth.utils';
-import { CTraderUnitsUtils } from '@/ctrader-units.utils';
+import { CTraderOAuthUtils } from './ctrader-oauth.utils';
+import { CTraderUnitsUtils } from './ctrader-units.utils';
 
 test('converts units to protocol volume in cents', () => {
   expect(CTraderUnitsUtils.unitsToProtocolVolume(10)).toBe(1000);

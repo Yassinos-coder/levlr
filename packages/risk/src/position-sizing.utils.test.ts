@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { PositionSizingUtils } from '@/position-sizing.utils';
+import { PositionSizingUtils } from './position-sizing.utils';
 
 const base = {
   balance: 1000,

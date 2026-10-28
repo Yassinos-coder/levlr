@@ -1,4 +1,4 @@
-import type { PositionSizeInput, PositionSizeResult } from '@/interfaces';
+import type { PositionSizeInput, PositionSizeResult } from './interfaces';
 
 export class PositionSizingUtils {
   static calculate(input: PositionSizeInput): PositionSizeResult {

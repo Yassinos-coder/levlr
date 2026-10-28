@@ -1,9 +1,14 @@
+import { useSignOutMutation } from '@/features/auth/hooks/useAuthMutations';
+import { BrokerStatus } from '@/features/brokers/components/BrokerStatus';
+import { useConnectCTraderMutation } from '@/features/brokers/hooks/useBrokerMutations';
+import { useBrokerConnectionsQuery } from '@/features/brokers/hooks/useBrokerQueries';
+import { StatusBar } from '@/features/status/components/StatusBar';
+import { useConnectionStatusQuery } from '@/features/status/hooks/useConnectionStatusQuery';
 import { WorkspaceHeader } from '@/features/workspace/components/WorkspaceHeader';
 import { WorkspaceLayout } from '@/features/workspace/components/WorkspaceLayout';
-import { useDefaultWorkspaceQuery } from '@/features/workspace/hooks/useWorkspaceQueries';
 import { useWorkspaceAutosave } from '@/features/workspace/hooks/useWorkspaceAutosave';
+import { useDefaultWorkspaceQuery } from '@/features/workspace/hooks/useWorkspaceQueries';
 import { LayoutStorage } from '@/features/workspace/stores/layoutStorage';
-import { useSignOutMutation } from '@/features/auth/hooks/useAuthMutations';
 
 interface WorkspacePageProps {
   userId: string;
@@ -12,6 +17,8 @@ interface WorkspacePageProps {
 
 export function WorkspacePage({ userId, email }: WorkspacePageProps) {
   const workspace = useDefaultWorkspaceQuery(userId);
+  const connections = useBrokerConnectionsQuery(userId);
+  const connect = useConnectCTraderMutation();
   const signOut = useSignOutMutation();
 
   if (workspace.isPending) return <div className="p-4 text-sm text-neutral-500">Loading workspace…</div>;
@@ -19,29 +26,40 @@ export function WorkspacePage({ userId, email }: WorkspacePageProps) {
   return (
     <WorkspaceReady
       userId={userId}
-      email={email}
       workspaceId={workspace.data?.id}
       initialLayout={workspace.data?.layout ?? LayoutStorage.load()}
-      onSignOut={() => signOut.mutate()}
+      header={
+        <WorkspaceHeader email={email} onSignOut={() => signOut.mutate()}>
+          <BrokerStatus
+            connections={connections.data ?? []}
+            connecting={connect.isPending}
+            errorMessage={connect.error?.message}
+            onConnect={() => connect.mutate()}
+          />
+        </WorkspaceHeader>
+      }
     />
   );
 }
 
-interface WorkspaceReadyProps extends WorkspacePageProps {
+interface WorkspaceReadyProps {
+  userId: string;
   workspaceId: string | undefined;
   initialLayout: Parameters<typeof WorkspaceLayout>[0]['initialLayout'];
-  onSignOut: () => void;
+  header: React.ReactNode;
 }
 
-function WorkspaceReady({ userId, email, workspaceId, initialLayout, onSignOut }: WorkspaceReadyProps) {
+function WorkspaceReady({ userId, workspaceId, initialLayout, header }: WorkspaceReadyProps) {
   const handleLayoutChange = useWorkspaceAutosave(userId, workspaceId);
+  const connectionStatus = useConnectionStatusQuery();
 
   return (
     <div className="flex h-full flex-col">
-      <WorkspaceHeader email={email} onSignOut={onSignOut} />
+      {header}
       <div className="min-h-0 flex-1">
         <WorkspaceLayout initialLayout={initialLayout} onLayoutChange={handleLayoutChange} />
       </div>
+      <StatusBar status={connectionStatus.data} />
     </div>
   );
 }

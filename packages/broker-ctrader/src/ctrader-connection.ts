@@ -3,9 +3,9 @@ import {
   CTRADER_PAYLOAD_TYPE,
   HEARTBEAT_INTERVAL_MS,
   REQUEST_TIMEOUT_MS,
-} from '@/constants/ctrader.constants';
-import { CTraderError } from '@/ctrader-error';
-import type { CTraderEnvironment, CTraderEventListener, CTraderMessage } from '@/interfaces';
+} from './constants/ctrader.constants';
+import { CTraderError } from './ctrader-error';
+import type { CTraderEnvironment, CTraderEventListener, CTraderMessage } from './interfaces';
 
 interface PendingRequest {
   resolve: (message: CTraderMessage) => void;

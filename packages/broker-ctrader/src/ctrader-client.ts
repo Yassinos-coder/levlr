@@ -1,12 +1,12 @@
-import { CTRADER_PAYLOAD_TYPE } from '@/constants/ctrader.constants';
-import type { CTraderConnection } from '@/ctrader-connection';
-import { CTraderUnitsUtils } from '@/ctrader-units.utils';
-import type { CTraderAppConfig, CTraderMessage, CTraderNewOrderParams } from '@/interfaces';
+import { CTRADER_PAYLOAD_TYPE } from './constants/ctrader.constants';
+import type { CTraderConnection } from './ctrader-connection';
+import { CTraderUnitsUtils } from './ctrader-units.utils';
+import type { CTraderAppConfig, CTraderMessage, CTraderNewOrderParams } from './interfaces';
 
 export class CTraderClient {
   constructor(
     private readonly connection: CTraderConnection,
-    private readonly ctidTraderAccountId: number,
+    readonly accountId: number,
   ) {}
 
   static authenticateApplication(connection: CTraderConnection, config: CTraderAppConfig) {
@@ -22,6 +22,10 @@ export class CTraderClient {
 
   getTrader() {
     return this.send(CTRADER_PAYLOAD_TYPE.TRADER_REQ, {});
+  }
+
+  getAssets() {
+    return this.send(CTRADER_PAYLOAD_TYPE.ASSET_LIST_REQ, {});
   }
 
   getSymbols() {
@@ -78,6 +82,6 @@ export class CTraderClient {
   }
 
   private send(payloadType: number, payload: Record<string, unknown>): Promise<CTraderMessage> {
-    return this.connection.request(payloadType, { ctidTraderAccountId: this.ctidTraderAccountId, ...payload });
+    return this.connection.request(payloadType, { ctidTraderAccountId: this.accountId, ...payload });
   }
 }

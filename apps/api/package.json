@@ -1,6 +1,6 @@
 {
   "name": "@levlr/api",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "bun --watch src/main.ts",
@@ -11,15 +11,19 @@
     "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@levlr/broker-core": "workspace:*",
+    "@levlr/broker-ctrader": "workspace:*",
+    "@levlr/risk": "workspace:*",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
-    "@levlr/broker-core": "workspace:*",
-    "@levlr/risk": "workspace:*",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
     "iovalkey": "^0.4.0",
+    "jose": "^6.2.13",
     "pg": "^8.23.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.0"

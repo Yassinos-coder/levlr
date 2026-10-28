@@ -1,4 +1,4 @@
-import { VOLUME_UNITS_PER_CENT } from '@/constants/ctrader.constants';
+import { VOLUME_UNITS_PER_CENT } from './constants/ctrader.constants';
 
 export class CTraderUnitsUtils {
   static unitsToProtocolVolume(units: number): number {
