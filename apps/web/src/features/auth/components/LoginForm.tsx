@@ -7,9 +7,10 @@ interface LoginFormProps {
   errorMessage?: string;
   onSubmit: (credentials: Credentials) => void;
   onToggleMode: () => void;
+  onGoogleSignIn: () => void;
 }
 
-export function LoginForm({ mode, pending, errorMessage, onSubmit, onToggleMode }: LoginFormProps) {
+export function LoginForm({ mode, pending, errorMessage, onSubmit, onToggleMode, onGoogleSignIn }: LoginFormProps) {
   const { register, handleSubmit } = useForm<Credentials>();
 
   return (
@@ -37,6 +38,14 @@ export function LoginForm({ mode, pending, errorMessage, onSubmit, onToggleMode 
         className="rounded bg-blue-600 px-3 py-2 text-sm font-medium disabled:opacity-50"
       >
         {mode === 'signIn' ? 'Sign in' : 'Create account'}
+      </button>
+      <button
+        type="button"
+        onClick={onGoogleSignIn}
+        disabled={pending}
+        className="rounded border border-neutral-700 px-3 py-2 text-sm hover:border-neutral-500 disabled:opacity-50"
+      >
+        Continue with Google
       </button>
       <button type="button" onClick={onToggleMode} className="text-xs text-neutral-400">
         {mode === 'signIn' ? 'No account? Sign up' : 'Have an account? Sign in'}

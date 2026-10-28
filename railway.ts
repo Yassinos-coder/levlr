@@ -45,11 +45,13 @@ class Railway {
     return Object.fromEntries(services.filter((service) => service.url).map((service) => [service.name, service.url as string]));
   }
 
+  static railpackVariables(config: ServiceConfig): Record<string, string> {
+    return { RAILPACK_BUILD_CMD: config.buildCommand, RAILPACK_START_CMD: config.startCommand };
+  }
+
   static configure(service: ServiceName, config: ServiceConfig) {
     const entries: [string, string][] = [
       ['build.builder', 'RAILPACK'],
-      ['build.buildCommand', config.buildCommand],
-      ['deploy.startCommand', config.startCommand],
       ['deploy.numReplicas', '1'],
       ['deploy.restartPolicyType', 'ON_FAILURE'],
     ];
@@ -94,6 +96,7 @@ function main() {
   Object.entries(SERVICE_CONFIG).forEach(([service, config]) => Railway.configure(service as ServiceName, config));
 
   Railway.setVariables('Levlr API', {
+    ...Railway.railpackVariables(SERVICE_CONFIG['Levlr API']),
     ...EnvFile.pick('apps/api/.env', API_ENV_KEYS),
     VALKEY_URL: 'redis://${{valkey.RAILWAY_PRIVATE_DOMAIN}}:6379',
     CORS_ORIGIN: webUrl,
@@ -101,6 +104,7 @@ function main() {
   });
 
   Railway.setVariables('Levlr Frontend', {
+    ...Railway.railpackVariables(SERVICE_CONFIG['Levlr Frontend']),
     ...EnvFile.pick('apps/web/.env', WEB_ENV_KEYS),
     VITE_API_URL: apiUrl,
   });

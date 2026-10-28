@@ -9,6 +9,10 @@ export function useAuthenticateMutation(mode: AuthMode) {
   });
 }
 
+export function useGoogleSignInMutation() {
+  return useMutation({ mutationFn: () => authService.signInWithGoogle() });
+}
+
 export function useSignOutMutation() {
   return useMutation({ mutationFn: () => authService.signOut() });
 }
