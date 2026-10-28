@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-10-28
+
+### Added
+- Railway infrastructure defined as code in `.railway/railway.ts`: services, build and start commands, resource limits, healthchecks and a pre-deploy database migration step.
+
+### Changed
+- API now runs from source on Railway and applies database migrations before each deploy through a dedicated `db:deploy` script.
+- Email sign-ups redirect back to the Levlr site instead of the project-wide default.
+
+### Fixed
+- API crashed on startup in production because the bundled build compiled decorators incorrectly.
+
 ## [0.2.0] - 2026-10-28
 
 ### Added

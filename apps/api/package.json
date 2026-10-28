@@ -1,14 +1,15 @@
 {
   "name": "@levlr/api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "bun --watch src/main.ts",
-    "build": "prisma generate && bun build src/main.ts --target=bun --outdir dist --packages external",
-    "start": "prisma migrate deploy && bun dist/main.js",
+    "build": "prisma generate",
+    "start": "bun src/main.ts",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@levlr/broker-core": "workspace:*",
