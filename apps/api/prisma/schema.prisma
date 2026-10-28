@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["levlr"]
+}
+
+model Profile {
+  id          String   @id @db.Uuid
+  displayName String?  @map("display_name")
+  timezone    String   @default("UTC")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  brokerConnections BrokerConnection[]
+  workspaces        Workspace[]
+  watchlists        Watchlist[]
+  chartLayouts      ChartLayout[]
+  chartDrawings     ChartDrawing[]
+  riskSettings      RiskSettings?
+  trades            Trade[]
+  aiSettings        AiSettings?
+  aiConversations   AiConversation[]
+  alerts            Alert[]
+
+  @@map("profiles")
+  @@schema("levlr")
+}
+
+model BrokerConnection {
+  id                String    @id @default(uuid()) @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  broker            String
+  environment       String
+  externalAccountId String    @map("external_account_id")
+  accountLabel      String?   @map("account_label")
+  secretRef         String    @map("secret_ref")
+  status            String    @default("disconnected")
+  lastSyncAt        DateTime? @map("last_sync_at") @db.Timestamptz
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  user   Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trades Trade[]
+
+  @@index([userId])
+  @@map("broker_connections")
+  @@schema("levlr")
+}
+
+model Workspace {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  name      String
+  layout    Json
+  isDefault Boolean  @default(false) @map("is_default")
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("workspaces")
+  @@schema("levlr")
+}
+
+model Watchlist {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  name      String
+  symbols   String[]
+  sortOrder Int      @default(0) @map("sort_order")
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("watchlists")
+  @@schema("levlr")
+}
+
+model ChartLayout {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  name       String
+  symbol     String
+  resolution String
+  content    Json
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("chart_layouts")
+  @@schema("levlr")
+}
+
+model ChartDrawing {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  symbol     String
+  shapeType  String   @map("shape_type")
+  points     Json
+  properties Json
+  label      String?
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, symbol])
+  @@map("chart_drawings")
+  @@schema("levlr")
+}
+
+model RiskSettings {
+  userId          String  @id @map("user_id") @db.Uuid
+  maxRiskPct      Decimal @default(1) @map("max_risk_pct") @db.Decimal(6, 3)
+  maxOpenRiskPct  Decimal @default(3) @map("max_open_risk_pct") @db.Decimal(6, 3)
+  dailyLossPct    Decimal @default(3) @map("daily_loss_pct") @db.Decimal(6, 3)
+  cooldownLosses  Int     @default(2) @map("cooldown_losses")
+  cooldownMinutes Int     @default(60) @map("cooldown_minutes")
+  maxTradesWindow Int     @default(5) @map("max_trades_window")
+  windowMinutes   Int     @default(30) @map("window_minutes")
+  weakHours       Int[]   @map("weak_hours")
+  propMode        Json?   @map("prop_mode")
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("risk_settings")
+  @@schema("levlr")
+}
+
+model Trade {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  connectionId     String    @map("connection_id") @db.Uuid
+  brokerPositionId String    @map("broker_position_id")
+  symbol           String
+  side             String
+  volume           Decimal   @db.Decimal(18, 6)
+  entry            Decimal   @db.Decimal(18, 8)
+  exit             Decimal?  @db.Decimal(18, 8)
+  sl               Decimal?  @db.Decimal(18, 8)
+  tp               Decimal?  @db.Decimal(18, 8)
+  riskAmount       Decimal?  @map("risk_amount") @db.Decimal(18, 2)
+  pnl              Decimal?  @db.Decimal(18, 2)
+  rMultiple        Decimal?  @map("r_multiple") @db.Decimal(8, 3)
+  openedAt         DateTime  @map("opened_at") @db.Timestamptz
+  closedAt         DateTime? @map("closed_at") @db.Timestamptz
+  session          String?
+  snapshotPath     String?   @map("snapshot_path")
+  analysis         Json?
+  notes            String?
+  tags             String[]
+
+  user       Profile          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connection BrokerConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@unique([connectionId, brokerPositionId])
+  @@index([userId, openedAt])
+  @@map("trades")
+  @@schema("levlr")
+}
+
+model AiSettings {
+  userId            String  @id @map("user_id") @db.Uuid
+  enabled           Boolean @default(false)
+  model             String  @default("claude-sonnet-5-5")
+  methodologyPrompt String? @map("methodology_prompt")
+  keySecretRef      String? @map("key_secret_ref")
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("ai_settings")
+  @@schema("levlr")
+}
+
+model AiConversation {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  symbol    String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user     Profile     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages AiMessage[]
+
+  @@index([userId])
+  @@map("ai_conversations")
+  @@schema("levlr")
+}
+
+model AiMessage {
+  id             String   @id @default(uuid()) @db.Uuid
+  conversationId String   @map("conversation_id") @db.Uuid
+  role           String
+  content        Json
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  conversation AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@map("ai_messages")
+  @@schema("levlr")
+}
+
+model Alert {
+  id        String  @id @default(uuid()) @db.Uuid
+  userId    String  @map("user_id") @db.Uuid
+  symbol    String
+  type      String
+  params    Json
+  aiComment Boolean @default(false) @map("ai_comment")
+  active    Boolean @default(true)
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("alerts")
+  @@schema("levlr")
+}

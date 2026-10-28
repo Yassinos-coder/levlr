@@ -1,0 +1,35 @@
+{
+  "name": "@levlr/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch src/main.ts",
+    "build": "prisma generate && bun build src/main.ts --target=bun --outdir dist --packages external",
+    "start": "prisma migrate deploy && bun dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "@levlr/broker-core": "workspace:*",
+    "@levlr/risk": "workspace:*",
+    "iovalkey": "^0.4.0",
+    "pg": "^8.23.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.0"
+  },
+  "devDependencies": {
+    "@levlr/config": "workspace:*",
+    "@types/bun": "latest",
+    "@types/express": "^5.0.0",
+    "@types/pg": "^8.23.1",
+    "prisma": "7.10.1",
+    "typescript": "^5.9.0"
+  }
+}

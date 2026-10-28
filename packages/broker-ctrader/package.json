@@ -1,0 +1,10 @@
+{
+  "name": "@levlr/broker-ctrader",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": { "typecheck": "tsc --noEmit", "test": "bun test" },
+  "dependencies": { "@levlr/broker-core": "workspace:*" },
+  "devDependencies": { "@levlr/config": "workspace:*", "typescript": "^5.9.0", "@types/bun": "latest" }
+}

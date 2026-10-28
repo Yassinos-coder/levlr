@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+@import 'dockview-react/dist/styles/dockview.css';
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: #0b0e14;
+  color: #d7dae0;
+  font-family: Inter, system-ui, sans-serif;
+}
