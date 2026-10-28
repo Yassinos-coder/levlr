@@ -10,7 +10,7 @@
     },
     "apps/api": {
       "name": "@levlr/api",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "dependencies": {
         "@levlr/broker-core": "workspace:*",
         "@levlr/broker-ctrader": "workspace:*",
@@ -40,7 +40,7 @@
     },
     "apps/web": {
       "name": "@levlr/web",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "dependencies": {
         "@supabase/supabase-js": "^2.118.0",
         "@tanstack/query-sync-storage-persister": "^5.105.0",
@@ -67,7 +67,7 @@
     },
     "packages/broker-core": {
       "name": "@levlr/broker-core",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "devDependencies": {
         "@levlr/config": "workspace:*",
         "typescript": "^5.9.0",
@@ -75,7 +75,7 @@
     },
     "packages/broker-ctrader": {
       "name": "@levlr/broker-ctrader",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "dependencies": {
         "@levlr/broker-core": "workspace:*",
       },
@@ -87,11 +87,11 @@
     },
     "packages/config": {
       "name": "@levlr/config",
-      "version": "0.1.1",
+      "version": "0.2.0",
     },
     "packages/risk": {
       "name": "@levlr/risk",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "dependencies": {
         "@levlr/broker-core": "workspace:*",
       },
