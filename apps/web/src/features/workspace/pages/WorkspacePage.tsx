@@ -1,3 +1,4 @@
+import { PanelState } from '@/components/shared/PanelState';
 import { useSignOutMutation } from '@/features/auth/hooks/useAuthMutations';
 import { BrokerStatus } from '@/features/brokers/components/BrokerStatus';
 import { useConnectCTraderMutation } from '@/features/brokers/hooks/useBrokerMutations';
@@ -21,7 +22,7 @@ export function WorkspacePage({ userId, email }: WorkspacePageProps) {
   const connect = useConnectCTraderMutation();
   const signOut = useSignOutMutation();
 
-  if (workspace.isPending) return <div className="p-4 text-sm text-neutral-500">Loading workspace…</div>;
+  if (workspace.isPending) return <PanelState loading title="Loading your workspace" />;
 
   return (
     <WorkspaceReady
@@ -33,7 +34,6 @@ export function WorkspacePage({ userId, email }: WorkspacePageProps) {
           <BrokerStatus
             connections={connections.data ?? []}
             connecting={connect.isPending}
-            errorMessage={connect.error?.message}
             onConnect={() => connect.mutate()}
           />
         </WorkspaceHeader>

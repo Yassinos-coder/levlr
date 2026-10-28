@@ -1,12 +1,190 @@
 @import 'tailwindcss';
 @import 'dockview-react/dist/styles/dockview.css';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/jetbrains-mono';
 
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-  background: #0b0e14;
-  color: #d7dae0;
-  font-family: Inter, system-ui, sans-serif;
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-bull: var(--bull);
+  --color-bear: var(--bear);
+  --color-violet: var(--violet);
+  --color-warn: var(--warn);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: oklch(0.975 0.006 260);
+  --foreground: oklch(0.2 0.03 268);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.03 268);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.03 268);
+  --primary: oklch(0.58 0.17 235);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.95 0.012 262);
+  --secondary-foreground: oklch(0.25 0.03 268);
+  --muted: oklch(0.955 0.01 262);
+  --muted-foreground: oklch(0.5 0.03 265);
+  --accent: oklch(0.94 0.035 285);
+  --accent-foreground: oklch(0.3 0.08 285);
+  --destructive: oklch(0.58 0.22 22);
+  --border: oklch(0.9 0.012 262);
+  --input: oklch(0.9 0.012 262);
+  --ring: oklch(0.58 0.17 235 / 55%);
+  --bull: oklch(0.6 0.17 155);
+  --bear: oklch(0.58 0.22 22);
+  --violet: oklch(0.55 0.22 295);
+  --warn: oklch(0.7 0.16 75);
+  --radius: 0.75rem;
+  --aurora-a: oklch(0.85 0.1 220 / 55%);
+  --aurora-b: oklch(0.85 0.1 295 / 45%);
+  --grid-line: oklch(0.2 0.03 268 / 6%);
+}
+
+.dark {
+  --background: oklch(0.14 0.026 268);
+  --foreground: oklch(0.96 0.01 260);
+  --card: oklch(0.185 0.03 268);
+  --card-foreground: oklch(0.96 0.01 260);
+  --popover: oklch(0.205 0.032 268);
+  --popover-foreground: oklch(0.96 0.01 260);
+  --primary: oklch(0.82 0.14 205);
+  --primary-foreground: oklch(0.18 0.03 268);
+  --secondary: oklch(0.25 0.035 268);
+  --secondary-foreground: oklch(0.96 0.01 260);
+  --muted: oklch(0.22 0.03 268);
+  --muted-foreground: oklch(0.7 0.03 265);
+  --accent: oklch(0.3 0.07 285);
+  --accent-foreground: oklch(0.96 0.01 260);
+  --destructive: oklch(0.7 0.2 20);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.82 0.14 205 / 55%);
+  --bull: oklch(0.8 0.17 160);
+  --bear: oklch(0.7 0.2 20);
+  --violet: oklch(0.7 0.2 295);
+  --warn: oklch(0.82 0.15 80);
+  --aurora-a: oklch(0.5 0.15 220 / 35%);
+  --aurora-b: oklch(0.45 0.2 295 / 35%);
+  --grid-line: oklch(1 0 0 / 5%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--card) 72%, transparent);
+  backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid var(--border);
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(120deg, var(--primary), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-brand-gradient {
+  background-image: linear-gradient(120deg, var(--primary), var(--violet));
+}
+
+@utility bg-aurora {
+  background-image:
+    radial-gradient(60% 50% at 15% 10%, var(--aurora-a), transparent 70%),
+    radial-gradient(55% 50% at 90% 85%, var(--aurora-b), transparent 70%);
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+@utility glow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent),
+    0 8px 40px -12px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+
+.dockview-theme-levlr {
+  color-scheme: light dark;
+  --dv-tabs-and-actions-container-font-size: 12px;
+  --dv-tabs-and-actions-container-height: 34px;
+  --dv-tab-font-size: 12px;
+  --dv-border-radius: 0px;
+  --dv-tab-margin: 0;
+  --dv-spacing-padding: 0px;
+  --dv-tab-border-radius: 0px;
+  --dv-sash-color: transparent;
+  --dv-active-sash-color: var(--primary);
+  --dv-active-sash-transition-duration: 0.15s;
+  --dv-active-sash-transition-delay: 0.2s;
+  --dv-group-view-background-color: var(--background);
+  --dv-tabs-and-actions-container-background-color: var(--card);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--background);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--card);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--background);
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--card);
+  --dv-tab-divider-color: var(--border);
+  --dv-activegroup-visiblepanel-tab-color: var(--foreground);
+  --dv-activegroup-hiddenpanel-tab-color: var(--muted-foreground);
+  --dv-inactivegroup-visiblepanel-tab-color: var(--muted-foreground);
+  --dv-inactivegroup-hiddenpanel-tab-color: var(--muted-foreground);
+  --dv-separator-border: var(--border);
+  --dv-paneview-header-border-color: var(--border);
+  --dv-paneview-active-outline-color: var(--primary);
+  --dv-drag-over-background-color: color-mix(in oklab, var(--primary) 18%, transparent);
+  --dv-drag-over-border-color: var(--primary);
+  --dv-icon-hover-background-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+  --dv-floating-box-shadow: 0 12px 40px rgb(0 0 0 / 35%);
+  --dv-floating-border: 1px solid var(--border);
+}
+
+.dockview-theme-levlr .dv-tab.dv-active-tab {
+  box-shadow: inset 0 -2px 0 var(--primary);
 }

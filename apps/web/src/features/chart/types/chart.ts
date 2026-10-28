@@ -1,3 +1,5 @@
+import type { ResolvedTheme } from '@/types/theme';
+
 export type ChartPeriodType = 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year';
 
 export interface ChartPeriod {
@@ -34,11 +36,36 @@ export interface ChartDataFeed {
   getBars(request: ChartBarsRequest): Promise<ChartBarsResult>;
 }
 
+export type ChartIndicatorId = 'sma20' | 'ema50' | 'volume';
+
+export type ChartOverlayKind = 'position' | 'order' | 'stopLoss' | 'takeProfit';
+
+export interface ChartOverlay {
+  id: string;
+  kind: ChartOverlayKind;
+  price: number;
+  label: string;
+  side?: 'buy' | 'sell';
+}
+
+export interface ChartTheme {
+  text: string;
+  grid: string;
+  border: string;
+  crosshair: string;
+  up: string;
+  down: string;
+  accent: string;
+  warn: string;
+  muted: string;
+}
+
 export interface ChartAdapter {
-  mount(container: HTMLElement): void;
+  mount(container: HTMLElement, theme: ResolvedTheme): void;
   setDataFeed(feed: ChartDataFeed): void;
-  setSymbol(symbol: ChartSymbol): void;
-  setPeriod(period: ChartPeriod): void;
-  resize(): void;
+  load(symbol: ChartSymbol, period: ChartPeriod): void;
+  setTheme(theme: ResolvedTheme): void;
+  setIndicators(indicators: ChartIndicatorId[]): void;
+  setOverlays(overlays: ChartOverlay[]): void;
   dispose(): void;
 }

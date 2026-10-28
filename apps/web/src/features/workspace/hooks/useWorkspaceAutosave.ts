@@ -2,6 +2,7 @@ import type { SerializedDockview } from 'dockview-react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useSaveWorkspaceMutation } from '@/features/workspace/hooks/useWorkspaceMutations';
 import { AUTOSAVE_DELAY_MS } from '@/features/workspace/constants/widgets';
+import { Notify } from '@/lib/notify';
 import { LayoutStorage } from '@/features/workspace/stores/layoutStorage';
 
 export function useWorkspaceAutosave(userId: string, initialWorkspaceId: string | undefined) {
@@ -18,8 +19,8 @@ export function useWorkspaceAutosave(userId: string, initialWorkspaceId: string 
       timer.current = setTimeout(async () => {
         try {
           workspaceId.current = await mutateAsync({ id: workspaceId.current, userId, layout });
-        } catch {
-          return;
+        } catch (error) {
+          Notify.fromError(error, 'Could not save your layout');
         }
       }, AUTOSAVE_DELAY_MS);
     },

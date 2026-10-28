@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-10-28
+
+### Added
+- Full interface redesign with a futuristic look, built on Tailwind CSS and shadcn/ui, with light, dark and system themes.
+- Shared UI library: dialogs, confirm dialogs, toasts, dropdowns, tooltips, panel empty and loading states.
+- Toast notifications for sign-in, sign-out, broker connection and layout-save errors, and for account creation.
+- Charting on TradingView's Lightweight Charts with a timeframe and indicator toolbar (SMA, EMA, volume), theme-aware colours and older-history loading.
+- Order, position, stop loss and take profit lines drawn on the chart from the trading store.
+
+### Changed
+- Sign-in page, workspace header, docked panels and status bar restyled.
+- Left and right panels are wider by default.
+
+### Removed
+- KLineCharts, replaced by Lightweight Charts.
+
 ## [0.2.1] - 2026-10-28
 
 ### Added

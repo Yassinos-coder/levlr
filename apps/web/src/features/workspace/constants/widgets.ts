@@ -22,7 +22,7 @@ export const DEFAULT_TAB_BY_ZONE: Record<PanelZone, string> = {
   bottom: 'positions',
 };
 
-export const ZONE_SIZE = { left: 260, right: 320, bottom: 240 };
+export const ZONE_SIZE = { left: 310, right: 340, bottom: 240 };
 
 export const LAYOUT_STORAGE_KEY = 'levlr.layout.v1';
 

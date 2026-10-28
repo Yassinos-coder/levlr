@@ -1,4 +1,7 @@
 import type { ReactNode } from 'react';
+import { Logo } from '@/components/shared/Logo';
+import { ThemeToggle } from '@/components/shared/ThemeToggle';
+import { UserMenu } from '@/features/auth/components/UserMenu';
 
 interface WorkspaceHeaderProps {
   email: string;
@@ -8,14 +11,12 @@ interface WorkspaceHeaderProps {
 
 export function WorkspaceHeader({ email, onSignOut, children }: WorkspaceHeaderProps) {
   return (
-    <header className="flex h-9 items-center justify-between border-b border-neutral-800 px-3 text-xs">
-      <span className="font-semibold">Levlr Terminal</span>
-      <div className="flex items-center gap-4 text-neutral-400">
+    <header className="glass flex h-12 shrink-0 items-center justify-between border-x-0 border-t-0 px-4">
+      <Logo />
+      <div className="flex items-center gap-3">
         {children}
-        <span>{email}</span>
-        <button type="button" onClick={onSignOut} className="hover:text-white">
-          Sign out
-        </button>
+        <ThemeToggle />
+        <UserMenu email={email} onSignOut={onSignOut} />
       </div>
     </header>
   );

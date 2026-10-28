@@ -1,4 +1,4 @@
-import { DockviewReact, themeDark } from 'dockview-react';
+import { DockviewReact } from 'dockview-react';
 import type { DockviewApi, DockviewReadyEvent, SerializedDockview } from 'dockview-react';
 import { ChartPanel } from '@/features/chart/components/ChartPanel';
 import { WidgetPlaceholder } from '@/features/workspace/components/WidgetPlaceholder';
@@ -57,5 +57,5 @@ export function WorkspaceLayout({ initialLayout, onLayoutChange }: WorkspaceLayo
     api.onDidLayoutChange(() => onLayoutChange(api.toJSON()));
   };
 
-  return <DockviewReact theme={themeDark} components={COMPONENTS} onReady={handleReady} />;
+  return <DockviewReact className="dockview-theme-levlr" components={COMPONENTS} onReady={handleReady} />;
 }

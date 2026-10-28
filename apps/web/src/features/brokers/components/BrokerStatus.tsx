@@ -1,29 +1,28 @@
+import { Plug } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import type { BrokerConnection } from '@/features/brokers/types/broker';
 
 interface BrokerStatusProps {
   connections: BrokerConnection[];
   connecting: boolean;
-  errorMessage?: string;
   onConnect: () => void;
 }
 
-export function BrokerStatus({ connections, connecting, errorMessage, onConnect }: BrokerStatusProps) {
+export function BrokerStatus({ connections, connecting, onConnect }: BrokerStatusProps) {
   return (
     <div className="flex items-center gap-2">
       {connections.map((connection) => (
-        <span key={connection.id} className="rounded bg-neutral-800 px-2 py-0.5 text-emerald-400">
-          {connection.label ?? connection.accountId} · {connection.environment}
-        </span>
+        <Badge key={connection.id} variant="outline" className="gap-1.5 font-mono text-[11px]">
+          <span className="size-1.5 rounded-full bg-bull shadow-[0_0_8px_var(--bull)]" />
+          {connection.label ?? connection.accountId}
+          <span className="text-muted-foreground uppercase">{connection.environment}</span>
+        </Badge>
       ))}
-      {errorMessage && <span className="text-red-400">{errorMessage}</span>}
-      <button
-        type="button"
-        onClick={onConnect}
-        disabled={connecting}
-        className="rounded border border-neutral-700 px-2 py-0.5 hover:border-neutral-500 disabled:opacity-50"
-      >
+      <Button variant="outline" size="sm" onClick={onConnect} disabled={connecting}>
+        <Plug />
         {connections.length > 0 ? 'Reconnect' : 'Connect IC Markets'}
-      </button>
+      </Button>
     </div>
   );
 }
