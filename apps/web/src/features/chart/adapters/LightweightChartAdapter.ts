@@ -6,6 +6,7 @@ import type {
   ChartBar,
   ChartDataFeed,
   ChartIndicatorId,
+  ChartLevel,
   ChartOverlay,
   ChartPeriod,
   ChartSymbol,
@@ -26,6 +27,10 @@ export class LightweightChartAdapter implements ChartAdapter {
   private volume: ISeriesApi<'Histogram'> | null = null;
   private readonly lines = new Map<LineIndicatorId, ISeriesApi<'Line'>>();
   private priceLines: IPriceLine[] = [];
+  private levelLines: IPriceLine[] = [];
+  private levels: ChartLevel[] = [];
+  private clickHandler: ((price: number) => void) | null = null;
+  private barsListener: ((bars: ChartBar[]) => void) | null = null;
   private feed: ChartDataFeed | null = null;
   private symbol: ChartSymbol | null = null;
   private period: ChartPeriod | null = null;
@@ -52,6 +57,12 @@ export class LightweightChartAdapter implements ChartAdapter {
     this.volume = this.chart.addSeries(HistogramSeries, { priceFormat: { type: 'volume' }, priceScaleId: 'volume', lastValueVisible: false, priceLineVisible: false });
     this.volume.priceScale().applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
 
+    this.chart.subscribeClick((param) => {
+      if (!this.clickHandler || !param.point || !this.candles) return;
+      const price = this.candles.coordinateToPrice(param.point.y);
+      if (price !== null) this.clickHandler(price);
+    });
+
     this.chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
       if (range && range.from < OLDER_BARS_THRESHOLD) this.loadOlder();
     });
@@ -67,6 +78,7 @@ export class LightweightChartAdapter implements ChartAdapter {
     this.symbol = symbol;
     this.period = period;
     this.bars = [];
+    this.barsListener?.([]);
     this.hasMore = false;
     this.generation += 1;
     this.candles?.applyOptions({ priceFormat: { type: 'price', precision: symbol.pricePrecision, minMove: 10 ** -symbol.pricePrecision } });
@@ -78,6 +90,7 @@ export class LightweightChartAdapter implements ChartAdapter {
     this.applyTheme();
     this.renderData();
     this.renderOverlays();
+    this.renderLevels();
   }
 
   setIndicators(indicators: ChartIndicatorId[]) {
@@ -92,6 +105,20 @@ export class LightweightChartAdapter implements ChartAdapter {
     this.renderOverlays();
   }
 
+  setLevels(levels: ChartLevel[]) {
+    this.levels = levels;
+    this.renderLevels();
+  }
+
+  setClickHandler(handler: ((price: number) => void) | null) {
+    this.clickHandler = handler;
+  }
+
+  setBarsListener(listener: ((bars: ChartBar[]) => void) | null) {
+    this.barsListener = listener;
+    if (this.bars.length > 0) listener?.(this.bars);
+  }
+
   dispose() {
     this.generation += 1;
     this.chart?.remove();
@@ -100,6 +127,9 @@ export class LightweightChartAdapter implements ChartAdapter {
     this.volume = null;
     this.lines.clear();
     this.priceLines = [];
+    this.levelLines = [];
+    this.barsListener = null;
+    this.clickHandler = null;
   }
 
   private async loadInitial(generation: number) {
@@ -155,6 +185,7 @@ export class LightweightChartAdapter implements ChartAdapter {
       })),
     );
     this.renderIndicators();
+    this.barsListener?.(this.bars);
   }
 
   private renderIndicators() {
@@ -186,6 +217,25 @@ export class LightweightChartAdapter implements ChartAdapter {
         axisLabelColor: color,
       });
     });
+  }
+
+  private renderLevels() {
+    const candles = this.candles;
+    if (!candles) return;
+
+    this.levelLines.forEach((line) => candles.removePriceLine(line));
+    const color = this.colors.warn;
+    this.levelLines = this.levels.map((level) =>
+      candles.createPriceLine({
+        price: level.price,
+        color,
+        lineWidth: 2,
+        lineStyle: LineStyle.LargeDashed,
+        axisLabelVisible: true,
+        title: level.label,
+        axisLabelColor: color,
+      }),
+    );
   }
 
   private overlayColor(overlay: ChartOverlay): string {

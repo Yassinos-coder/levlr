@@ -1,6 +1,15 @@
 import { useEffect, useRef } from 'react';
 import { LightweightChartAdapter } from '@/features/chart/adapters/LightweightChartAdapter';
-import type { ChartDataFeed, ChartIndicatorId, ChartOverlay, ChartPeriod, ChartSymbol } from '@/features/chart/types/chart';
+import type {
+  ChartBar,
+  ChartDataFeed,
+  ChartIndicatorId,
+  ChartLevel,
+  ChartOverlay,
+  ChartPeriod,
+  ChartSymbol,
+} from '@/features/chart/types/chart';
+import { cn } from '@/lib/utils';
 import type { ResolvedTheme } from '@/types/theme';
 
 interface ChartViewProps {
@@ -10,9 +19,24 @@ interface ChartViewProps {
   theme: ResolvedTheme;
   indicators: ChartIndicatorId[];
   overlays: ChartOverlay[];
+  levels: ChartLevel[];
+  drawMode: boolean;
+  onLevelDrawn: (price: number) => void;
+  onBarsChange: (bars: ChartBar[]) => void;
 }
 
-export function ChartView({ feed, symbol, period, theme, indicators, overlays }: ChartViewProps) {
+export function ChartView({
+  feed,
+  symbol,
+  period,
+  theme,
+  indicators,
+  overlays,
+  levels,
+  drawMode,
+  onLevelDrawn,
+  onBarsChange,
+}: ChartViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const adapterRef = useRef<LightweightChartAdapter | null>(null);
 
@@ -32,6 +56,10 @@ export function ChartView({ feed, symbol, period, theme, indicators, overlays }:
   }, [feed]);
 
   useEffect(() => {
+    adapterRef.current?.setBarsListener(onBarsChange);
+  }, [onBarsChange, feed]);
+
+  useEffect(() => {
     adapterRef.current?.load(symbol, period);
   }, [feed, symbol, period]);
 
@@ -47,5 +75,13 @@ export function ChartView({ feed, symbol, period, theme, indicators, overlays }:
     adapterRef.current?.setOverlays(overlays);
   }, [overlays, feed]);
 
-  return <div ref={containerRef} className="h-full w-full" />;
+  useEffect(() => {
+    adapterRef.current?.setLevels(levels);
+  }, [levels, feed]);
+
+  useEffect(() => {
+    adapterRef.current?.setClickHandler(drawMode ? (price) => onLevelDrawn(Number(price.toFixed(symbol.pricePrecision))) : null);
+  }, [drawMode, onLevelDrawn, symbol.pricePrecision, feed]);
+
+  return <div ref={containerRef} className={cn('h-full w-full', drawMode && 'cursor-crosshair')} />;
 }

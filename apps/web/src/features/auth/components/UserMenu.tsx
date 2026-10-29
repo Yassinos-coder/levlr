@@ -1,13 +1,14 @@
-import { LogOut } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface UserMenuProps {
   email: string;
   onSignOut: () => void;
+  onOpenSettings: () => void;
 }
 
-export function UserMenu({ email, onSignOut }: UserMenuProps) {
+export function UserMenu({ email, onSignOut, onOpenSettings }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50" aria-label="Account menu">
@@ -20,6 +21,9 @@ export function UserMenu({ email, onSignOut }: UserMenuProps) {
       <DropdownMenuContent align="end" className="min-w-52">
         <DropdownMenuLabel className="truncate font-normal text-muted-foreground">{email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onOpenSettings}>
+          <Settings /> Account settings
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={onSignOut}>
           <LogOut /> Sign out
         </DropdownMenuItem>

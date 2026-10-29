@@ -5,4 +5,6 @@ dist
 .env.*
 !.env.example
 apps/api/src/generated
-apps/api/src/generated
+apps/web/public/charting_library
+apps/web/src/vendor/charting_library
+charting_library

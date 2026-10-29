@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-10-29
+
+### Added
+- Layout menu in the header: reset the dashboard to its default arrangement, save the current layout under a name, load a saved layout, or delete one.
+- Account settings page with email change, password change, and two-factor authentication using an authenticator app.
+- Two-factor code prompt at sign-in for accounts that turned it on.
+- AI settings tab: bring your own API key for Anthropic, OpenAI, Google, Mistral, xAI or OpenRouter. Keys are stored encrypted and only the last four characters are shown.
+- AI copilot chat in the AI panel, working with Anthropic or OpenAI models. It reads your chart, your drawn levels, candles, positions and orders.
+- Horizontal level drawing tool on the chart, with a menu to remove levels.
+- The copilot counts how many times price touched a level, and whether each touch held or broke.
+- User-controlled AI permissions: read-only by default, with separate switches to let the copilot propose new orders and to propose closing or adjusting open trades.
+- Yes/No trade proposal cards that ask for a position size when none is given. Nothing reaches the broker until you confirm, orders are checked against your max risk per trade, and confirmation currently works on demo accounts only.
+- Optional description of how you trade, used by the copilot when judging setups.
+
+### Changed
+- Returning to the workspace now restores your latest layout instead of an older one.
+- API error messages from the server are now shown in notifications.
+
 ## [0.3.1] - 2026-10-28
 
 ### Fixed

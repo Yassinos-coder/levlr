@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/features/auth/services/authService';
 import type { AuthMode, Credentials } from '@/features/auth/types/auth';
 import { Notify } from '@/lib/notify';
@@ -25,5 +25,14 @@ export function useSignOutMutation() {
   return useMutation({
     mutationFn: () => authService.signOut(),
     onError: (error) => Notify.fromError(error, 'Sign out failed'),
+  });
+}
+
+export function useVerifyMfaMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (code: string) => authService.verifyMfaCode(code),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['auth', 'mfa'] }),
+    onError: (error) => Notify.fromError(error, 'That code did not work'),
   });
 }

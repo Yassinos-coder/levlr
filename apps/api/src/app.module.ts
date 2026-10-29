@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AiKeysModule } from '@/ai-keys/ai-keys.module';
+import { AiModule } from '@/ai/ai.module';
 import { BrokersModule } from '@/brokers/brokers.module';
 import { CacheModule } from '@/cache/cache.module';
 import configuration from '@/config/configuration';
@@ -13,6 +15,8 @@ import { PrismaModule } from '@/prisma/prisma.module';
     CacheModule,
     HealthModule,
     BrokersModule,
+    AiKeysModule,
+    AiModule,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import type {
   BrokerConnectionRow,
+  BrokerConnectionSecretRow,
   UpsertBrokerConnectionInput,
 } from '@/brokers/ctrader/interfaces';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -29,6 +30,37 @@ export class BrokerConnectionRepository {
       });
     } catch (error) {
       throw new InternalServerErrorException(`Failed to load broker connections: ${BrokerConnectionRepository.reason(error)}`);
+    }
+  }
+
+  async findSecretById(userId: string, id: string): Promise<BrokerConnectionSecretRow | null> {
+    try {
+      return await this.prisma.brokerConnection.findFirst({
+        where: { id, userId },
+        select: { id: true, environment: true, externalAccountId: true, secretRef: true },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(`Failed to load broker connection: ${BrokerConnectionRepository.reason(error)}`);
+    }
+  }
+
+  async findPreferredId(userId: string): Promise<{ id: string; environment: string } | null> {
+    try {
+      return await this.prisma.brokerConnection.findFirst({
+        where: { userId, status: 'connected' },
+        select: { id: true, environment: true },
+        orderBy: [{ environment: 'asc' }, { createdAt: 'asc' }],
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(`Failed to load broker connection: ${BrokerConnectionRepository.reason(error)}`);
+    }
+  }
+
+  async updateSecret(id: string, secretRef: string): Promise<void> {
+    try {
+      await this.prisma.brokerConnection.update({ where: { id }, data: { secretRef } });
+    } catch (error) {
+      throw new InternalServerErrorException(`Failed to update broker tokens: ${BrokerConnectionRepository.reason(error)}`);
     }
   }
 

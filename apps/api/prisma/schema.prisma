@@ -22,6 +22,8 @@ model Profile {
   riskSettings      RiskSettings?
   trades            Trade[]
   aiSettings        AiSettings?
+  aiProviderKeys    AiProviderKey[]
+  aiTradeProposals  AiTradeProposal[]
   aiConversations   AiConversation[]
   alerts            Alert[]
 
@@ -43,6 +45,7 @@ model BrokerConnection {
 
   user   Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
   trades Trade[]
+  aiTradeProposals AiTradeProposal[]
 
   @@unique([userId, broker, externalAccountId])
   @@index([userId])
@@ -165,13 +168,52 @@ model Trade {
 model AiSettings {
   userId            String  @id @map("user_id") @db.Uuid
   enabled           Boolean @default(false)
+  provider          String  @default("anthropic")
   model             String  @default("claude-sonnet-5-5")
+  allowPlanTrades   Boolean @default(false) @map("allow_plan_trades")
+  allowManageTrades Boolean @default(false) @map("allow_manage_trades")
   methodologyPrompt String? @map("methodology_prompt")
   keySecretRef      String? @map("key_secret_ref")
 
   user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("ai_settings")
+  @@schema("levlr")
+}
+
+model AiProviderKey {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  provider     String
+  secretRef    String   @map("secret_ref")
+  keyHint      String   @map("key_hint")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@map("ai_provider_keys")
+  @@schema("levlr")
+}
+
+model AiTradeProposal {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  connectionId String    @map("connection_id") @db.Uuid
+  kind         String
+  payload      Json
+  status       String    @default("pending")
+  result       Json?
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  expiresAt    DateTime  @map("expires_at") @db.Timestamptz
+  resolvedAt   DateTime? @map("resolved_at") @db.Timestamptz
+
+  user       Profile          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connection BrokerConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("ai_trade_proposals")
   @@schema("levlr")
 }
 

@@ -12,5 +12,8 @@ export default () => ({
     clientSecret: process.env.SPOTWARE_CLIENT_SECRET ?? '',
     redirectUri: process.env.SPOTWARE_REDIRECT_URI ?? 'http://localhost:3001/brokers/ctrader/callback',
   },
+  ai: {
+    liveTradingEnabled: process.env.AI_LIVE_TRADING === 'true',
+  },
   valkeyUrl: process.env.VALKEY_URL ?? '',
 });

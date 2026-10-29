@@ -9,3 +9,10 @@ export function useDefaultWorkspaceQuery(userId: string) {
     retry: false,
   });
 }
+
+export function useSavedLayoutsQuery(userId: string) {
+  return useQuery({
+    queryKey: ['workspace', 'saved', userId],
+    queryFn: () => workspaceService.listSaved(),
+  });
+}

@@ -48,6 +48,12 @@ export interface ChartOverlay {
   side?: 'buy' | 'sell';
 }
 
+export interface ChartLevel {
+  id: string;
+  price: number;
+  label: string;
+}
+
 export interface ChartTheme {
   text: string;
   grid: string;
@@ -67,5 +73,8 @@ export interface ChartAdapter {
   setTheme(theme: ResolvedTheme): void;
   setIndicators(indicators: ChartIndicatorId[]): void;
   setOverlays(overlays: ChartOverlay[]): void;
+  setLevels(levels: ChartLevel[]): void;
+  setClickHandler(handler: ((price: number) => void) | null): void;
+  setBarsListener(listener: ((bars: ChartBar[]) => void) | null): void;
   dispose(): void;
 }

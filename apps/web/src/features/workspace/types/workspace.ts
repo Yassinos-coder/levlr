@@ -33,3 +33,9 @@ export interface SaveWorkspaceInput {
   userId: string;
   layout: SerializedDockview;
 }
+
+export interface SaveNamedLayoutInput {
+  userId: string;
+  name: string;
+  layout: SerializedDockview;
+}

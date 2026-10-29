@@ -35,6 +35,21 @@ class AuthService {
     if (error) throw error;
   }
 
+  async getMfaRequirement(): Promise<boolean> {
+    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (error) throw error;
+    return data.nextLevel === 'aal2' && data.currentLevel !== 'aal2';
+  }
+
+  async verifyMfaCode(code: string) {
+    const { data, error } = await supabase.auth.mfa.listFactors();
+    if (error) throw error;
+    const factor = data.totp[0];
+    if (!factor) throw new Error('No authenticator is set up for this account');
+    const verified = await supabase.auth.mfa.challengeAndVerify({ factorId: factor.id, code });
+    if (verified.error) throw verified.error;
+  }
+
   async signOut() {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;

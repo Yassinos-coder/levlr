@@ -1,3 +1,5 @@
+import type { CTraderAdapter } from '@levlr/broker-ctrader';
+
 export interface CTraderOAuthState {
   userId: string;
   nonce: string;
@@ -38,4 +40,16 @@ export interface UpsertBrokerConnectionInput {
   externalAccountId: string;
   accountLabel: string;
   secretRef: string;
+}
+
+export interface BrokerConnectionSecretRow {
+  id: string;
+  environment: string;
+  externalAccountId: string;
+  secretRef: string;
+}
+
+export interface BrokerSession {
+  adapter: CTraderAdapter;
+  environment: 'demo' | 'live';
 }
